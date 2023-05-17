@@ -1,0 +1,4362 @@
+{
+	"info": {
+		"_postman_id": "5384cb65-b76c-4ce9-a0b6-7703e6cbf40c",
+		"name": "E-commerce",
+		"description": "This is backend of E-commerce project written in NODE.JS EXPRESS.JS POSTGRESQL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AUTH",
+			"item": [
+				{
+					"name": "Get me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/getMe",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"getMe"
+							]
+						},
+						"description": "This route reads token from cookie and fetches user by decoding token\n\nNo body, no parameters and no headers required only cookie assigned by server"
+					},
+					"response": []
+				},
+				{
+					"name": "Send Otp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json()['token'])"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"verification_code\": \"123456\",\r\n    \"phoneNumber\": \"+99364189477\",\r\n    \"issued_at\": \"2021-07-04T11:18:11.380Z\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/sendOtp",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"sendOtp"
+							]
+						},
+						"description": "This route is for sending otp\n\nBody is required to be \n```json\n{\n   \"verification_code\": string,\n   \"phoneNumber\": string,\n   \"issued_at\": date\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Sign up",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json()['token'])"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Ahmet\",\r\n    \"phoneNumber\": \"62189477\",\r\n    \"password\": \"123456\",\r\n    \"verification_code\": \"456879\"\r\n     \r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/signup",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signup"
+							]
+						},
+						"description": "This route signs up new user\n\nrole cannot be specified and gets default user role (only admin can upgrade user to other roles *see /admin/users/{userId} PUT)\n\nBody is required to be \n```json\n{\n  name: string,\n  phoneNumber: string, // valid&unique tkm number\n  password: string // length > 6\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Login user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json()['token'])"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phoneNumber\": \"62142340\",\r\n    \"password\": \"123456\"\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Logs in user taking phoneNumber and password in body"
+					},
+					"response": []
+				},
+				{
+					"name": "Log out",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/logout",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "logs out a user\n\nreads from cookie who you are (can use bearer token)\n\ndon't worry if no content is sent back\n\ncheck if status code is 204, which means successful"
+					},
+					"response": []
+				},
+				{
+					"name": "Change password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzg3YTEzNzctZjk2ZC00MTU0LThiZDctYjIyNGNiMjJkNWEyIiwiaWF0IjoxNjE0MjU0MzczLCJleHAiOjE2MjIwMzAzNzN9.UF7RQlhCsupNNSOIEmpMTYOnm5k_UysFeDblzytKVJQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"12345678\",\r\n    \"newPassword\": \"12345sdfs5\"\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/changePassword",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"changePassword"
+							]
+						},
+						"description": "Takes old password for verification and new password to be set\n\nreads from cookie (or bearer token) to know who you are\n\nbody form \n```json\n{\n  oldPassword: string,\n  newPassword: string // length > 6\n}\n```\n\nreturns nothing only status code 204"
+					},
+					"response": []
+				},
+				{
+					"name": "Change me",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/eziz/Pictures/Desktop Backgrounds/Image 20.jpg"
+								},
+								{
+									"key": "password",
+									"value": "12",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "phoneNumber",
+									"value": "65399183",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/changeMe",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"changeMe"
+							]
+						},
+						"description": "Changes user profile except password\n\nrequires form-data as it takes photo\n\nstructure is any field you want to change in your profile (except password, role, loggedOut)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete profile image",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/deleteImage",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"deleteImage"
+							]
+						},
+						"description": "Deletes image from server and sets to null image field\n\nno body, header is required only cookie (or bearer token) to get access"
+					},
+					"response": []
+				}
+			],
+			"description": "login, signup authentication logics\r\n"
+		},
+		{
+			"name": "ADMIN",
+			"item": [
+				{
+					"name": "Users Routes",
+					"item": [
+						{
+							"name": "Get all users",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTNkZDc0NjYtNGRmYi00Mzg2LTg1YmEtZWQ1ZmI4NThlMjRkIiwiaWF0IjoxNjE0MjYyODIyLCJleHAiOjE2MjIwMzg4MjJ9.l6bldwHuMKKu0ak-3x0Ot7-NESjN7edF2G8KsmLU650",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/users",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "5",
+											"disabled": true
+										},
+										{
+											"key": "q",
+											"value": "eziz",
+											"disabled": true
+										},
+										{
+											"key": "role",
+											"value": "admin",
+											"disabled": true
+										}
+									]
+								},
+								"description": "This route gets all users with simplified scope \n```json\n{\n   id: number,\n   name: string,\n   phoneNumber: string,\n   role: string,\n   image: string\n} \n```\ncan take query params as:\nlimit=number //for pagi\noffset=number //for pagi\nq=string //searching term\nfield=string // gets exactly equal fields\nfield[lt]=number | date // lt, lte, gt, gte, ne, in can be replaced instead of lt which are operators\n\ndefault is query param is: limit=10\n\nnumber of result will be available through X-Total-Count header\n\nroute requires token"
+							},
+							"response": []
+						},
+						{
+							"name": "Get user by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/users/10",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users",
+										"10"
+									]
+								},
+								"description": "This route takes user id as endpoint and returns requested user with detailed scope\n```json\n{\n   id: number,\n   name: string,\n   phoneNumber: string,\n   passwordChangedAt: date | null,\n   loggedOut: boolean,\n   role: string,\n   image: string,\n   createdAt: date,\n   updatedAt: date\n}\n```\nrequires token"
+							},
+							"response": []
+						},
+						{
+							"name": "Update users credentials",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "role",
+											"value": "admin",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": [],
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "Post Malone",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "role",
+											"value": "partner",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/users/14",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users",
+										"14"
+									]
+								},
+								"description": "this route updates user's field\n\ntakes form-data (image uploading):\n\n| KEY| VALUE|\n| --- | --- |\n| name | string |\n| role| string|\n| image | file|\n| phoneNumber  | string  |\n\nrestricted to admin\nfields are optional"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete  user by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/users/4",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users",
+										"4"
+									]
+								},
+								"description": "this route deletes requested user\n\nreturns status code 204, which is no-content"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete image of  user by id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/users/4/deleteImage",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users",
+										"4",
+										"deleteImage"
+									]
+								},
+								"description": "this route deletes requested user\n\nreturns status code 204, which is no-content"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Products Routes",
+					"item": [
+						{
+							"name": "Get all products",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/products",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "fields",
+											"value": "name,price,category,countInStock",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "8",
+											"disabled": true
+										},
+										{
+											"key": "paranoid",
+											"value": "false",
+											"disabled": true
+										},
+										{
+											"key": "deletedAt[ne]",
+											"value": "null",
+											"disabled": true
+										},
+										{
+											"key": "creatorId[ne]",
+											"value": "null",
+											"disabled": true
+										},
+										{
+											"key": "q",
+											"value": "ер",
+											"disabled": true
+										},
+										{
+											"key": "countInStock[lte]",
+											"value": "1000",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "2",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "4",
+											"disabled": true
+										}
+									]
+								},
+								"description": "This route get all products\n\ntakes params:\n\n| KEY| VALUE| DESCRIPTION |\n| --- | --- | --- |\n| q | string | to search |\n| field | string | gets only products meeting requirement |\n| sort | -field1,field2,-field3 | for sorting first takes precedence. if '-' is put before then sorted in desenting order, otherwise ascending order |\n| field[opertor] | string | nested param |\n| limit | number | pagi tools *deafault=10 |\n| offset | number | pagi tools |\n\nreturns \n```json\n[\n   {\n     \"id\": number,\n     \"name_ru\": string,\n     \"name_tm\": string,\n     \"brand\": string,\n     \"price\": string(decimal),\n     \"countInStock\": string(integer),\n     \"rating\": string(decimal),\n     \"numReviews\": integer,\n     \"images\": string[],\n     \"description_ru\": string,\n     \"description_tm\": string,\n     \"discount\": integer,\n     \"active\": boolean,\n     \"viewCount\": integer,\n     \"likeCount\": integer,\n     \"creatorId\": integer,\n     \"subCategoryId\": integer\n   }, \n   ...,\n   { Product.scope('simplified') }\n]\n```\nTotal number of data can be accessed from header X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get product by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/products/7",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										"7"
+									]
+								},
+								"description": "this route returns data in json in below form:\n```json\n{\n   \"id\": number,\n   \"name_ru\": string,\n   \"name_tm\": string,\n   \"brand\": string,\n   \"price\": string(decimal),\n   \"countInStock\": string(integer),\n   \"rating\": string(deciaml),\n   \"numReviews\": integer,\n   \"images\": string[],\n   \"description_ru\": string,\n   \"description_tm\": string,\n   \"discount\": integer,\n   \"active\": boolean,\n   \"viewCount\": integer,\n   \"likeCount\": integer,\n   \"createdAt\": date,\n   \"updatedAt\": date,\n   \"creatorId\": number,\n   \"subCategoryId\": number,\n   \"creator\": {\n      \"id\": number,\n      \"name\": string,\n      \"phoneNumber\": string,\n      \"password\": string,\n      \"role\": string,\n      \"image\": string\n   }\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Create new product",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name_ru",
+											"value": "Краска",
+											"type": "text"
+										},
+										{
+											"key": "brand",
+											"value": "Berk",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "15.00",
+											"type": "text"
+										},
+										{
+											"key": "countInStock",
+											"value": "450",
+											"type": "text"
+										},
+										{
+											"key": "description_ru",
+											"value": "Крутая краска",
+											"type": "text"
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": [],
+											"disabled": true
+										},
+										{
+											"key": "active",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "subCategoryId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "name_tm",
+											"value": "Berk kraska",
+											"type": "text"
+										},
+										{
+											"key": "description_tm",
+											"value": "Bet kraska",
+											"type": "text"
+										},
+										{
+											"key": "marketId",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/products",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products"
+									]
+								},
+								"description": "This route create new product\nrequires token \nrequires data in form-data\nlikeCount, viewCount, rating, reviewNumber fields are ignored\n\n| KEY| VALUE| DESCRIPTION |\n| --- | --- | --- |\n| name_ru | string | required |\n| name_tm | string | required |\n| brand | string | required |\n| countInStock | number | default = 0 |\n| description_ru | string | required |\n| description_tm | string | required |\n| images | files | default = [] |\n| active | boolean | default = false |\n| subCategory | number | required |\n| marketId | number | default = null |\n\nas admin you can set whose market product belongs to by specifying marketId=number\n\nimages require files to be selected // limits in size and number (check out source code)"
+							},
+							"response": []
+						},
+						{
+							"name": "Update product by id",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "active",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": "/C:/Users/user/Desktop/traning node.js/suratlar/download.png",
+											"disabled": true
+										},
+										{
+											"key": "subCategoryId",
+											"value": "1",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "discount",
+											"value": "22",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/products/5",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										"5"
+									]
+								},
+								"description": "This route updates product\n\nrequires data in form-data\n\nsame as create product\n\nbut only updated fields required \n\nmerges new data instance with existing one"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete product's image by name",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/products/1/image/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										"1",
+										"image",
+										"2"
+									]
+								},
+								"description": "This route deletes image from server\n\nrequires productId and image index\n\nreturns 204 status code"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete product by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/products/4",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										"4"
+									]
+								},
+								"description": "This route deletes product\n\nreturns no-content status 204"
+							},
+							"response": []
+						}
+					],
+					"description": "product routes for admin only"
+				},
+				{
+					"name": "Inbox routes",
+					"item": [
+						{
+							"name": "Get all messages",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/inbox",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"inbox"
+									]
+								},
+								"description": "gets all messages"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all sent messages",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/inbox/sentMessages",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"inbox",
+										"sentMessages"
+									]
+								},
+								"description": "gets all sent messages"
+							},
+							"response": []
+						},
+						{
+							"name": "Get a message by uuid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/inbox/ef494504-2a9d-43d5-b271-eae3aa2f2977",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"inbox",
+										"ef494504-2a9d-43d5-b271-eae3aa2f2977"
+									]
+								},
+								"description": "gets a message by uuid and reads it"
+							},
+							"response": []
+						},
+						{
+							"name": "Get sent message by uuid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/inbox/sentMessages/2496c1ad-0617-483d-9e20-5713d7664daf",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"inbox",
+										"sentMessages",
+										"2496c1ad-0617-483d-9e20-5713d7664daf"
+									]
+								},
+								"description": "gets sent message by uuid"
+							},
+							"response": []
+						},
+						{
+							"name": "Send new message",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"message\": \"Sallamma\",\r\n    \"sendTo\": \"4b4c7f3e-cec7-4b72-840a-4228ee75bda5\"\r\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/inbox",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"inbox"
+									]
+								},
+								"description": "sends new message"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete message by uuid",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/inbox/431c1bb2-7923-4db6-912f-bdb25aa5df4d",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"inbox",
+										"431c1bb2-7923-4db6-912f-bdb25aa5df4d"
+									]
+								},
+								"description": "deletes message by uuid"
+							},
+							"response": []
+						}
+					],
+					"description": "inbox where messages come and go"
+				},
+				{
+					"name": "Categories Routes",
+					"item": [
+						{
+							"name": "Get all categories",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/categories",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"categories"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								},
+								"description": "this route gets categories with numberOfSubCategories and numberOfBanners\n\ncan take params as limit, offset, fieldName, q for searching and so on\n\nreturns body in this form\n```json \n{\n  \"id\": number,\n  \"name_ru\": string,\n  \"name_tm\": string,\n  \"image\": string,\n  \"numberOfSubCategories\": number,\n  \"numberOfBanners\": number\n}\n```\nnumber Of results returned in header as X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get category by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/categories/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"categories",
+										"1"
+									]
+								},
+								"description": "this route gets category by id with subCategories (limited to 10) and banners (limited to 10)\n\ndoes not take any params\n\nreturns body in this form\n```json \n{\n  \"id\": number,\n  \"name_ru\": string,\n  \"name_tm\": string,\n  \"image\": string,\n  \"subCategories\": [\n     { \n       \"id\": number,\n       \"name_ru\": string,\n       \"name_tm\": string,\n       \"categoryId\": number\n     },\n    ... \n     {\n       SubCategory\n     }\n  ],\n  \"banners\": [\n     { \n       \"id\": number,\n       \"image\": string,\n       \"page_path\": string,\n       \"categoryId\": number\n     },\n    ... \n     {\n       Banner\n     }\n  ]\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Update category by id",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/eziz/Downloads/69662909_629837854091528_472795896933777408_o.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/categories/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"categories",
+										"1"
+									]
+								},
+								"description": "this route updates category by id\n\nto be updated fields must be provided in form-data:\n\n| KEY| VALUE|\n| --- | --- |\n| name_ru | string|\n| name_tm | string|\n| image   |  file |\n\nall values are optional"
+							},
+							"response": []
+						},
+						{
+							"name": "Create new category",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name_tm",
+											"value": "Gapy",
+											"type": "text"
+										},
+										{
+											"key": "name_ru",
+											"value": "Двери",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/user/Desktop/traning node.js/suratlar/masterok.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/categories",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"categories"
+									]
+								},
+								"description": "this route creates new category\n\nfields are required in form-data:\n\n| KEY| VALUE|\n| --- | --- |\n| name_ru | string|\n| name_tm | string|\n| image   |  file |\n\nimage field is optional"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete category by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/categories/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"categories",
+										"2"
+									]
+								},
+								"description": "this route does not require anything but token for admin\n\n# Pay Attention\nif you delete category all related subcategory and products will be gone with it\n\nreturns no-content 204 status code"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete category image by id",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/categories/1/deleteImage",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"categories",
+										"1",
+										"deleteImage"
+									]
+								},
+								"description": "this route updates category image field to null and deletes image from server \nreturns no-content status 204"
+							},
+							"response": []
+						}
+					],
+					"description": "Category CRUD"
+				},
+				{
+					"name": "SubCategories Routes",
+					"item": [
+						{
+							"name": "Get all subCategories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/subCategories",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"subCategories"
+									],
+									"query": [
+										{
+											"key": "categoryId",
+											"value": "2",
+											"disabled": true
+										}
+									]
+								},
+								"description": "this route gets subCategories with numberOfProducts\n\ncan take params as limit, offset, fieldName, q for searching and so on\n\nreturns body in this form\n```json \n[\n  {\n    \"id\": number,\n    \"name_ru\": string,\n    \"name_tm\": string,\n    \"categoryId\": number,\n    \"numberOfProducts\": {\n       \"activeCount\": number,\n       \"inActiveCount\": number\n         }\n   },\n ...\n   {\n     SubCategory\n   }\n ]\n```\nnumber Of results returned in header as X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get subCategory by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/subCategories/6",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"subCategories",
+										"6"
+									]
+								},
+								"description": "this route gets subCategory by id with products\n\nreturns body in this form\n```json \n{\n  \"id\": number,\n  \"name_ru\": string,\n  \"name_tm\": string,\n  \"categoryId\": number,\n  \"activeProducts\": [\n      {\n         \"id\": number,\n         \"name_ru\": string,\n         \"name_tm\": string,\n         \"brand\": string,\n         \"price\": string(decimal),\n         \"countInStock\": string(integer),\n         \"rating\": string(decimal),\n         \"numReviews\": integer,\n         \"images\": string[],\n         \"description_ru\": string,\n         \"description_tm\": string,\n         \"discount\": integer,\n         \"active\": boolean(true),\n         \"viewCount\": integer,\n         \"likeCount\": integer,\n         \"creatorId\": number(or null) ,\n         \"subCategoryId\": number\n      },\n      ...,\n      {Product}\n  ],\n  \"inActiveProducts\": [\n      {\n         \"id\": number,\n         \"name_ru\": string,\n         \"name_tm\": string,\n         \"brand\": string,\n         \"price\": string(decimal),\n         \"countInStock\": string(integer),\n         \"rating\": string(decimal),\n         \"numReviews\": integer,\n         \"images\": string[],\n         \"description_ru\": string,\n         \"description_tm\": string,\n         \"discount\": integer,\n         \"active\": boolean(false),\n         \"viewCount\": integer,\n         \"likeCount\": integer,\n         \"creatorId\": number(or null) ,\n         \"subCategoryId\": number\n      },\n      ...,\n      {Product}\n   ] \n}\n```\n# Pay Attention\nIn sake of optimization number of products in each array limited to 5 (use them as preview)\nto get more of them check product routes itself"
+							},
+							"response": []
+						},
+						{
+							"name": "Update subCategory by id",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name_tm\": \"Kitayskiy gapylar\",\r\n    \"name_ru\": \"Китайские двери\",\r\n    \"categoryId\": 1\r\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/subCategories/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"subCategories",
+										"2"
+									]
+								},
+								"description": "this route updates subCategory by id\n\nto be updated fields must be provided in raw json:\n```json\n{\n    \"name_tm\": string,\n    \"name_ru\": string,\n    \"categoryId\": number\n}\n```\n\nall values are optional"
+							},
+							"response": []
+						},
+						{
+							"name": "Create new subCategory",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name_tm\": \"Kitayskiy gapy\",\r\n    \"name_ru\": \"Китайский двер\",\r\n    \"categoryId\": \"1\"\r\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/subCategories",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"subCategories"
+									]
+								},
+								"description": "this route creates new subCategory\n\nall fields must be provided in raw json:\n```json\n{\n    \"name_tm\": string,\n    \"name_ru\": string,\n    \"categoryId\": number\n}\n```\n\nall values are required"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete subCategory by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/subCategories/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"subCategories",
+										"2"
+									]
+								},
+								"description": "this route does not require anything but token for admin\n\n# Pay Attention\nif you delete subCategory all related products will be gone with it\n\nreturns no-content 204 status code"
+							},
+							"response": []
+						}
+					],
+					"description": "SubCategories CRUD functionality"
+				},
+				{
+					"name": "Banners Routes",
+					"item": [
+						{
+							"name": "Get all banners",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/banners",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"banners"
+									]
+								},
+								"description": "this route gets banners with\n\ncan take params as limit, offset, fieldName, q for searching and so on\n\nreturns body in this form\n```json\n[\n  {\n    \"id\": number,\n    \"image\": string,\n    \"page_path\": string,\n    \"categoryId\": number\n  },\n  ...,\n  {Banner}\n]\n```\nnumber Of results returned in header as X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get banner by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/banners/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"banners",
+										"2"
+									]
+								},
+								"description": "this route gets banner by id with its related category\n\ndoes not take any params\n\nreturns body in this form\n```json \n{\n  \"id\": number,\n  \"image\": string,\n  \"page_path\": string,\n  \"categoryId\": number,\n  \"category\": {\n     \"id\": number,\n     \"name_ru\": string,\n     \"name_tm\": string,\n     \"image\": string\n   }\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Create new banner",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "page_path",
+											"value": "/market/1",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/eziz/Downloads/recipe-pizza-dough-without-yeast.jpg"
+										},
+										{
+											"key": "categoryId",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/banners",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"banners"
+									]
+								},
+								"description": "this route creates new banner\n\nfields are required in form-data:\n\n| KEY| VALUE| DESCRIPTION |\n| --- | --- | --- |\n| page_path | string| default = null |\n| categoryId | number | default = null |\n| image   |  file | required |"
+							},
+							"response": []
+						},
+						{
+							"name": "Update banner by id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "page_path",
+											"value": "/market/79",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/eziz/Downloads/lamb-and-beef-kebab-1.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/banners/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"banners",
+										"1"
+									]
+								},
+								"description": "this route updates banner by id\n\nto be updated fields must be provided in form-data:\n\n| KEY| VALUE|\n| --- | --- |\n| page_path | string|\n| categoryId | string|\n| image   |  file |\n\nall values are optional"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete banner by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/banners/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"banners",
+										"1"
+									]
+								},
+								"description": "this route deletes banner and related image from db\n\nreturns no-content 204 status code"
+							},
+							"response": []
+						}
+					],
+					"description": "Banners CRUD functionality"
+				},
+				{
+					"name": "Orders Routes",
+					"item": [
+						{
+							"name": "Get all orders made by users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/orders",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"orders"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "customerId",
+											"value": "17",
+											"disabled": true
+										}
+									]
+								},
+								"description": "gets all orders made by users"
+							},
+							"response": []
+						},
+						{
+							"name": "Get order by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/orders/38",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"orders",
+										"38"
+									]
+								},
+								"description": "gets order by id"
+							},
+							"response": []
+						},
+						{
+							"name": "Update order by id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"isDelivered\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/orders/38",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"orders",
+										"38"
+									]
+								},
+								"description": "marks order as delivered by id\r\nand sets deliveredAt time"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete order by id *forced",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/orders/30",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"orders",
+										"30"
+									]
+								},
+								"description": "marks order as delivered by id\r\nand sets deliveredAt time"
+							},
+							"response": []
+						}
+					],
+					"description": "orders CRUD functionality"
+				},
+				{
+					"name": "SearchTerms Routes",
+					"item": [
+						{
+							"name": "Get all searched terms",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/searchTerms",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"searchTerms"
+									]
+								},
+								"description": "This route get all searched terms\n\ntakes params:\n\n| KEY| VALUE| DESCRIPTION |\n| --- | --- | --- |\n| q | string | to search |\n| field | string | gets only products meeting requirement |\n| sort | -field1,field2,-field3 | for sorting first takes precedence. if '-' is put before then sorted in desenting order, otherwise ascending order |\n| field[opertor] | string | nested param |\n| limit | number | pagi tools *deafault=10 |\n| offset | number | pagi tools |\n\nreturns \n```json\n[\n   {\n     \"id\": number,\n     \"term\": string,\n     \"searchCount\": number\n   }, \n   ...,\n   { SearchTerm }\n]\n```\nTotal number of data can be accessed from header X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get searched term by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/searchTerms/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"searchTerms",
+										"2"
+									]
+								},
+								"description": "this route returns searchTerm in json in below form:\n```json\n{\n   \"id\": number,\n   \"term\": string,\n   \"searchCount\": number\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Update searched term by id",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"searchCount\": 55\r\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/searchTerms/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"searchTerms",
+										"2"
+									]
+								},
+								"description": "This route updates searched term by id\n\nrequires data in raw-json:\n```json\n{\n    \"term\": string // optional\n}\n```\nmerges new data instance with existing one\n\n# ATTENTION\nyou cannot update searchCount field"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete searched term by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/searchTerms/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"searchTerms",
+										"1"
+									]
+								},
+								"description": "this route deletes searchTerm by id \nand returns no-content"
+							},
+							"response": []
+						}
+					],
+					"description": "SearchTerms CRUD functionality"
+				},
+				{
+					"name": "Markets Routes",
+					"item": [
+						{
+							"name": "Get all markets",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/markets",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"markets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create new market",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name_tm",
+											"value": "Yenish",
+											"type": "text"
+										},
+										{
+											"key": "name_ru",
+											"value": "Победа",
+											"type": "text"
+										},
+										{
+											"key": "description_tm",
+											"value": "Gowy",
+											"type": "text"
+										},
+										{
+											"key": "description_ru",
+											"value": "Отлично",
+											"type": "text"
+										},
+										{
+											"key": "phoneNumber",
+											"value": "+993 61014258",
+											"type": "text"
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": "/C:/Users/eziz/Downloads/recipe-pizza-dough-without-yeast.jpg"
+										},
+										{
+											"key": "ownerId",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "address_tm",
+											"value": "Aşgabat",
+											"type": "text"
+										},
+										{
+											"key": "address_ru",
+											"value": "Ашгабад",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/markets",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"markets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get market by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/markets/7",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"markets",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete market by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/markets/3",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"markets",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete market image by id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/markets/1/image/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"markets",
+										"1",
+										"image",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update market by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "images",
+											"type": "file",
+											"src": "/C:/Users/eziz/Downloads/pizza.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/markets/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"markets",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reviews Routes",
+					"item": [
+						{
+							"name": "Get all reviews",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/reviews",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"reviews"
+									],
+									"query": [
+										{
+											"key": "productId",
+											"value": "13",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get review by userId and productId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/reviews/products/13/users/15",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"reviews",
+										"products",
+										"13",
+										"users",
+										"15"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update review by userId and productId",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"Betinden, gytyndan\",\r\n    \"approvedByAdmin\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/reviews/products/13/users/15",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"reviews",
+										"products",
+										"13",
+										"users",
+										"15"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Brands Routes",
+					"item": [
+						{
+							"name": "Get all brands",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/brands",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"brands"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get brand by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/brands/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"brands",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a brand",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name_tm",
+											"value": "AkYol",
+											"type": "text"
+										},
+										{
+											"key": "name_ru",
+											"value": "АкЙол",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/user/Desktop/traning node.js/suratlar/bycgy.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/brands",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"brands"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update brand by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name_tm",
+											"value": "Berk",
+											"type": "text"
+										},
+										{
+											"key": "name_ru",
+											"value": "Берк",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/user/Desktop/traning node.js/suratlar/harytlar.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/brands/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"brands",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete brand",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/brands/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"brands",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "UsdRates Routes",
+					"item": [
+						{
+							"name": "Get all rates",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/rates",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"rates"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create new rate",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"value\": 30.00\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/rates",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"rates"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get rate by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/rates/5",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"rates",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update rate by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"active\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/rates/4",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"rates",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete rate by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/admin/rates/5",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"rates",
+										"5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{TOKEN}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "PARTNER",
+			"item": [
+				{
+					"name": "Products Routes",
+					"item": [
+						{
+							"name": "Get all products list by partner's id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/10/products",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"10",
+										"products"
+									],
+									"query": [
+										{
+											"key": "creatorId",
+											"value": "9",
+											"disabled": true
+										}
+									]
+								},
+								"description": "This route get all products\n\ntakes params:\n\n| KEY| VALUE| DESCRIPTION |\n| --- | --- | --- |\n| q | string | to search |\n| field | string | gets only products meeting requirement |\n| sort | -field1,field2,-field3 | for sorting first takes precedence. if '-' is put before then sorted in desenting order, otherwise ascending order |\n| field[opertor] | string | nested param |\n| limit | number | pagi tools *deafault=10 |\n| offset | number | pagi tools |\n\nPARTNER SPECIFIC PRODUCT WILL COME (ypu cant deceive with ?creatorId=number)\n\nreturns \n```json\n[\n   {\n     \"id\": number,\n     \"name_ru\": string,\n     \"name_tm\": string,\n     \"brand\": string,\n     \"price\": string(decimal),\n     \"countInStock\": string(integer),\n     \"rating\": string(decimal),\n     \"numReviews\": integer,\n     \"images\": string[],\n     \"description_ru\": string,\n     \"description_tm\": string,\n     \"discount\": integer,\n     \"active\": boolean,\n     \"viewCount\": integer,\n     \"likeCount\": integer,\n     \"creatorId\": integer,\n     \"subCategoryId\": integer\n   }, \n   ...,\n   { Product.scope('simplified') }\n]\n```\nTotal number of data can be accessed from header X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get product by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/10/products/17",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"10",
+										"products",
+										"17"
+									]
+								},
+								"description": "this route returns data in json in below form:\n```json\n{\n   \"id\": number,\n   \"name_ru\": string,\n   \"name_tm\": string,\n   \"brand\": string,\n   \"price\": string(decimal),\n   \"countInStock\": string(integer),\n   \"rating\": string(deciaml),\n   \"numReviews\": integer,\n   \"images\": string[],\n   \"description_ru\": string,\n   \"description_tm\": string,\n   \"discount\": integer,\n   \"active\": boolean,\n   \"viewCount\": integer,\n   \"likeCount\": integer,\n   \"createdAt\": date,\n   \"updatedAt\": date,\n   \"creatorId\": number,\n   \"subCategoryId\": number,\n   \"creator\": {\n      \"id\": number,\n      \"name\": string,\n      \"phoneNumber\": string,\n      \"password\": string,\n      \"role\": string,\n      \"image\": string\n   }\n}\n```\n\nPARTNER SPECIFIC PRODUCTS ONLY"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a new product",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name_ru",
+											"value": "Gapy",
+											"type": "text"
+										},
+										{
+											"key": "name_tm",
+											"value": "Двер",
+											"type": "text"
+										},
+										{
+											"key": "brand",
+											"value": "Aybolek",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "2000",
+											"type": "text"
+										},
+										{
+											"key": "countInStock",
+											"value": "500",
+											"type": "text"
+										},
+										{
+											"key": "description_ru",
+											"value": "Охуенно",
+											"type": "text"
+										},
+										{
+											"key": "description_tm",
+											"value": "Bet",
+											"type": "text"
+										},
+										{
+											"key": "discount",
+											"value": "20",
+											"type": "text"
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": [
+												"/C:/Users/eziz/Downloads/5819712.jpg",
+												"/C:/Users/eziz/Downloads/1829587385810114_1025.jpg"
+											],
+											"disabled": true
+										},
+										{
+											"key": "subCategoryId",
+											"value": "5",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/8/products",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"8",
+										"products"
+									]
+								},
+								"description": "This route creates new product\nrequires token \nrequires data in form-data\nlikeCount, viewCount, rating, reviewNumber, active fields are ignored\n\n| KEY| VALUE| DESCRIPTION |\n| --- | --- | --- |\n| name_ru | string | required |\n| name_tm | string | required |\n| brand | string | required |\n| countInStock | number | default = 0 |\n| description_ru | string | required |\n| description_tm | string | required |\n| images | files | default = [] |\n| subCategory | number | required |\n\nimages require files to be selected // limits in size and number (check out source code)"
+							},
+							"response": []
+						},
+						{
+							"name": "Update product by id",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Congratulations",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "price",
+											"value": "0.00",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "brand",
+											"value": "Post Malone",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": [
+												"/C:/Users/eziz/Downloads/recipe-pizza-dough-without-yeast.jpg",
+												"/C:/Users/eziz/Downloads/53110049.gif"
+											]
+										},
+										{
+											"key": "countInStock",
+											"value": "4",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "active",
+											"value": "true",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "discount",
+											"value": "20",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/8/products/7",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"8",
+										"products",
+										"7"
+									]
+								},
+								"description": "This route updates product\n\nrequires data in form-data\n\nsame as create product\n\nbut only updated fields required \n\nmerges new data instance with existing one\n\nPARTNER CANT MAKE ANY CHANGES IF PRODUCT IS ACTIVE"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete partner's product's Image by name",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/8/products/7/image/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"8",
+										"products",
+										"7",
+										"image",
+										"2"
+									]
+								},
+								"description": "This route deletes image from server\n\nrequires productId and image index\n\nreturns 204 status code\n\nPARTNER CANT MAKE ANY CHANGES IF PRODUCT IS ACTIVE"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete product by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/8/products/7",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"8",
+										"products",
+										"7"
+									]
+								},
+								"description": "This route deletes product\n\nPARTNER WONT BE ABLE TO DELETE IF PRODUCT IS ACTIVE"
+							},
+							"response": []
+						}
+					],
+					"description": "here kept all products related routes"
+				},
+				{
+					"name": "Inbox Routes",
+					"item": [
+						{
+							"name": "Get all income messages",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/4b4c7f3e-cec7-4b72-840a-4228ee75bda5/inbox",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"4b4c7f3e-cec7-4b72-840a-4228ee75bda5",
+										"inbox"
+									]
+								},
+								"description": "gets all income messages"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all partner's sent messages to admin",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/4b4c7f3e-cec7-4b72-840a-4228ee75bda5/inbox/sentMessages",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"4b4c7f3e-cec7-4b72-840a-4228ee75bda5",
+										"inbox",
+										"sentMessages"
+									]
+								},
+								"description": "gets all partner's sent messages by admin"
+							},
+							"response": []
+						},
+						{
+							"name": "Get partner's message by uuid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/4b4c7f3e-cec7-4b72-840a-4228ee75bda5/inbox/22824c38-9581-467c-8ba4-75840f84217a",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"4b4c7f3e-cec7-4b72-840a-4228ee75bda5",
+										"inbox",
+										"22824c38-9581-467c-8ba4-75840f84217a"
+									]
+								},
+								"description": "gets partner's message by uuid"
+							},
+							"response": []
+						},
+						{
+							"name": "Get partner's sent message to admin by uuid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/4b4c7f3e-cec7-4b72-840a-4228ee75bda5/inbox/sentMessages/ef494504-2a9d-43d5-b271-eae3aa2f2977",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"4b4c7f3e-cec7-4b72-840a-4228ee75bda5",
+										"inbox",
+										"sentMessages",
+										"ef494504-2a9d-43d5-b271-eae3aa2f2977"
+									]
+								},
+								"description": "gets partner's sent message to admin by uuid"
+							},
+							"response": []
+						},
+						{
+							"name": "Send new message to admin",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"message\": \"Ay ay yay Admin\"\r\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/e2d6551c-a17f-43e5-9d5e-3c07cec1c57c/inbox",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"e2d6551c-a17f-43e5-9d5e-3c07cec1c57c",
+										"inbox"
+									]
+								},
+								"description": "sends new message to admin"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete partner's message by uuid",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/4b4c7f3e-cec7-4b72-840a-4228ee75bda5/inbox/431c1bb2-7923-4db6-912f-bdb25aa5df4d",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"4b4c7f3e-cec7-4b72-840a-4228ee75bda5",
+										"inbox",
+										"431c1bb2-7923-4db6-912f-bdb25aa5df4d"
+									]
+								},
+								"description": "deletes partner's message by uuid"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Order Routes",
+					"item": [
+						{
+							"name": "Get related products to partner from orders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/10/orders",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"10",
+										"orders"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "2",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								},
+								"description": "gets related products to partner from orders"
+							},
+							"response": []
+						},
+						{
+							"name": "Get order by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/10/orders/37",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"10",
+										"orders",
+										"37"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "2",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								},
+								"description": "gets related products to partner from orders"
+							},
+							"response": []
+						}
+					],
+					"description": "orders CRUD functionality for partners"
+				},
+				{
+					"name": "Categories Routes",
+					"item": [
+						{
+							"name": "Get all categories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/2/categories",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"2",
+										"categories"
+									]
+								},
+								"description": "this route gets categories with numberOfSubCategories\n\ncan take params as limit, offset, fieldName, q for searching and so on\n\nreturns body in this form\n```json \n{\n  \"id\": number,\n  \"name_ru\": string,\n  \"name_tm\": string,\n  \"image\": string,\n  \"numberOfSubCategories\": number\n}\n```\nnumber Of results returned in header as X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get category by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/2/categories/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"2",
+										"categories",
+										"1"
+									]
+								},
+								"description": "this route gets category by id with subCategories (limited to 10)\n\ndoes not take any params\n\nreturns body in this form\n```json \n{\n  \"id\": number,\n  \"name_ru\": string,\n  \"name_tm\": string,\n  \"image\": string,\n  \"subCategories\": [\n     { \n       \"id\": number,\n       \"name_ru\": string,\n       \"name_tm\": string,\n       \"categoryId\": number\n     },\n    ... \n     {\n       SubCategory\n     }\n  ]\n}\n```"
+							},
+							"response": []
+						}
+					],
+					"description": "Categories R functionality",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Reviews Routes",
+					"item": [
+						{
+							"name": "Get reviewed product which partner owes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/10/reviews?approvedByAdmin=false",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"10",
+										"reviews"
+									],
+									"query": [
+										{
+											"key": "approvedByAdmin",
+											"value": "false"
+										}
+									]
+								},
+								"description": "gets reviewed product which partner owes"
+							},
+							"response": []
+						},
+						{
+							"name": "Get review by product's and user's id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/10/reviews/products/17/users/18",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"10",
+										"reviews",
+										"products",
+										"17",
+										"users",
+										"18"
+									]
+								},
+								"description": "get review by product's and user's id"
+							},
+							"response": []
+						}
+					],
+					"description": "reviews R functionality"
+				},
+				{
+					"name": "SubCategories Routes",
+					"item": [
+						{
+							"name": "Get all subCategories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/8/subCategories",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"8",
+										"subCategories"
+									]
+								},
+								"description": "this route gets subCategories with numberOfProducts\n\ncan take params as limit, offset, fieldName, q for searching and so on\n\nreturns body in this form\n```json \n[\n  {\n    \"id\": number,\n    \"name_ru\": string,\n    \"name_tm\": string,\n    \"categoryId\": number,\n    \"numberOfProducts\": {\n       \"activeCount\": number,\n       \"inActiveCount\": number\n         }\n   },\n ...\n   {\n     SubCategory\n   }\n ]\n```\n# Pay Attention \nnumberOfProducts will be specific to partner\n\nnumber Of results returned in header as X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get subCategory by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/8/subCategories/6",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"8",
+										"subCategories",
+										"6"
+									]
+								},
+								"description": "this route gets subCategory by id with products\n\nreturns body in this form\n```json \n{\n  \"id\": number,\n  \"name_ru\": string,\n  \"name_tm\": string,\n  \"categoryId\": number,\n  \"activeProducts\": [\n      {\n         \"id\": number,\n         \"name_ru\": string,\n         \"name_tm\": string,\n         \"brand\": string,\n         \"price\": string(decimal),\n         \"countInStock\": string(integer),\n         \"rating\": string(decimal),\n         \"numReviews\": integer,\n         \"images\": string[],\n         \"description_ru\": string,\n         \"description_tm\": string,\n         \"discount\": integer,\n         \"active\": boolean(true),\n         \"viewCount\": integer,\n         \"likeCount\": integer,\n         \"creatorId\": number(or null) ,\n         \"subCategoryId\": number\n      },\n      ...,\n      {Product}\n  ],\n  \"inActiveProducts\": [\n      {\n         \"id\": number,\n         \"name_ru\": string,\n         \"name_tm\": string,\n         \"brand\": string,\n         \"price\": string(decimal),\n         \"countInStock\": string(integer),\n         \"rating\": string(decimal),\n         \"numReviews\": integer,\n         \"images\": string[],\n         \"description_ru\": string,\n         \"description_tm\": string,\n         \"discount\": integer,\n         \"active\": boolean(false),\n         \"viewCount\": integer,\n         \"likeCount\": integer,\n         \"creatorId\": number(or null) ,\n         \"subCategoryId\": number\n      },\n      ...,\n      {Product}\n   ] \n}\n```\n# Pay Attention\nIn sake of optimization number of products in each array limited to 5 (use them as preview)\nto get more of them check product routes itself\nAND FOR PARTNERS ITS PRODUCTS STRICTED TO HIS/HER PRODUCTS"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Markets Routes",
+					"item": [
+						{
+							"name": "Get market by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/14/market",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"14",
+										"market"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update market by id",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "images",
+											"type": "file",
+											"src": [
+												"/C:/Users/eziz/Downloads/53110049.gif",
+												"/C:/Users/eziz/Downloads/Classic-Homemade-Pizza-Dough-close.jpg"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/14/market",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"14",
+										"market"
+									]
+								},
+								"description": "This route updates product\n\nrequires data in form-data\n\nsame as create product\n\nbut only updated fields required \n\nmerges new data instance with existing one\n\nPARTNER CANT MAKE ANY CHANGES IF PRODUCT IS ACTIVE"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete image of market by index",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/14/market/images/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"14",
+										"market",
+										"images",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Brands",
+					"item": [
+						{
+							"name": "Get all brands",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/2/brands",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"2",
+										"brands"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get brand by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/partner/2/brands/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"partner",
+										"2",
+										"brands",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{TOKEN}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "PUBLIC",
+			"item": [
+				{
+					"name": "Products Routes",
+					"item": [
+						{
+							"name": "Get all active products",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/public/products",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"products"
+									],
+									"query": [
+										{
+											"key": "paranoid",
+											"value": "false",
+											"disabled": true
+										},
+										{
+											"key": "deletedAt[ne]",
+											"value": "null",
+											"disabled": true
+										},
+										{
+											"key": "active",
+											"value": "false",
+											"disabled": true
+										}
+									]
+								},
+								"description": "This route get all products (ONLY ACTIVES)\n\noptional params:\n\n| KEY| VALUE| DESCRIPTION |\n| --- | --- | --- |\n| q | string | to search |\n| field | string | gets only products meeting requirement |\n| sort | -field1,field2,-field3 | for sorting first takes precedence. if '-' is put before then sorted in desenting order, otherwise ascending order |\n| field[opertor] | string | nested param |\n| limit | number | pagi tools *deafault=10 |\n| offset | number | pagi tools |\n\nreturns \n```json\n[\n   {\n     \"id\": number,\n     \"name_ru\": string,\n     \"name_tm\": string,\n     \"brand\": string,\n     \"price\": string(decimal),\n     \"countInStock\": string(integer),\n     \"rating\": string(decimal),\n     \"numReviews\": integer,\n     \"images\": string[],\n     \"description_ru\": string,\n     \"description_tm\": string,\n     \"discount\": integer,\n     \"active\": boolean,\n     \"viewCount\": integer,\n     \"likeCount\": integer,\n     \"marketId\": integer,\n     \"subCategoryId\": integer\n   }, \n   ...,\n   { Product.scope('simplified') }\n]\n```\nTotal number of data can be accessed from header X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all active products authored",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/public/authored/products?marketId=7",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"authored",
+										"products"
+									],
+									"query": [
+										{
+											"key": "paranoid",
+											"value": "false",
+											"disabled": true
+										},
+										{
+											"key": "deletedAt[ne]",
+											"value": "null",
+											"disabled": true
+										},
+										{
+											"key": "active",
+											"value": "false",
+											"disabled": true
+										},
+										{
+											"key": "marketId",
+											"value": "7"
+										}
+									]
+								},
+								"description": "This route get all products (ONLY ACTIVES)\n\noptional params:\n\n| KEY| VALUE| DESCRIPTION |\n| --- | --- | --- |\n| q | string | to search |\n| field | string | gets only products meeting requirement |\n| sort | -field1,field2,-field3 | for sorting first takes precedence. if '-' is put before then sorted in desenting order, otherwise ascending order |\n| field[opertor] | string | nested param |\n| limit | number | pagi tools *deafault=10 |\n| offset | number | pagi tools |\n\nreturns \n```json\n[\n   {\n     \"id\": number,\n     \"name_ru\": string,\n     \"name_tm\": string,\n     \"brand\": string,\n     \"price\": string(decimal),\n     \"countInStock\": string(integer),\n     \"rating\": string(decimal),\n     \"numReviews\": integer,\n     \"images\": string[],\n     \"description_ru\": string,\n     \"description_tm\": string,\n     \"discount\": integer,\n     \"active\": boolean,\n     \"viewCount\": integer,\n     \"likeCount\": integer,\n     \"marketId\": integer,\n     \"subCategoryId\": integer,\n     \"favored\": boolean,\n     \"quantityInCart\": number\n   }, \n   ...,\n   { Product.scope('simplified') }\n]\n```\nTotal number of data can be accessed from header X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get product by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/products/18",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"products",
+										"18"
+									]
+								},
+								"description": "This route gets active product by id in detailed scope // check out source code\nthis route returns data in json in below form:\n```json\n{\n  \"product\": {\n     \"id\": number,\n     \"name_ru\": string,\n     \"name_tm\": string,\n     \"brand\": string,\n     \"price\": string(decimal),\n     \"countInStock\": string(integer),\n     \"rating\": string(deciaml),\n     \"numReviews\": integer,\n     \"images\": string[],\n     \"description_ru\": string,\n     \"description_tm\": string,\n     \"discount\": integer,\n     \"active\": boolean,\n     \"viewCount\": integer,\n     \"likeCount\": integer,\n     \"createdAt\": date,\n     \"updatedAt\": date,\n     \"marketId\": number,\n     \"subCategoryId\": number,\n     \"market\": {\n         \"id\": integer,\n         \"name_tm\": string,\n         \"name_ru\": string,\n         \"address_tm\": string,\n         \"address_ru\": string,\n         \"phoneNumber\": string,\n         \"rating\": string(decimal),\n         \"numRatings\": integer,\n         \"images\": string[],\n         \"ownerId\": integer\n       }\n    },\n    \"similarProducts\": [\n       {\n          \"id\": number,\n          \"name_ru\": string,\n          \"name_tm\": string,\n          \"brand\": string,\n          \"price\": string(decimal),\n          \"countInStock\": string(integer),\n          \"rating\": string(decimal),\n          \"numReviews\": integer,\n          \"images\": string[],\n          \"description_ru\": string,\n          \"description_tm\": string,\n          \"discount\": integer,\n          \"active\": boolean(active),\n          \"viewCount\": integer,\n          \"likeCount\": integer,\n          \"createdAt\": date,\n          \"updatedAt\": date,\n          \"creatorId\": integer,\n          \"subCategoryId\": integer\n       },\n       ...,\n       {Product.scope(simplified)}\n    ]\n}\n```\nin short \n```json\n{\n  \"product\": Product.scope(marketIncluded)[],\n  \"similarProducts\": Product.scope(simplified)[]\n}\n```\n\nand gets similar products with limit = 10"
+							},
+							"response": []
+						},
+						{
+							"name": "Add to favorite",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/public/products/13/favorite",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"products",
+										"13",
+										"favorite"
+									]
+								},
+								"description": "This route adds product to your favorites\n\nreturns no-content"
+							},
+							"response": []
+						},
+						{
+							"name": "Like product by id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/products/1/like",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"products",
+										"1",
+										"like"
+									]
+								},
+								"description": "this route likes specified product\n\nreturns no-content"
+							},
+							"response": []
+						}
+					],
+					"description": "Products Routes for client side"
+				},
+				{
+					"name": "Favorites Routes",
+					"item": [
+						{
+							"name": "Get all favorite products",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"products\": [\r\n        {\"id\": 1},\r\n        {\"id\": 2},\r\n        {\"id\": 3},\r\n        {\"id\": 4}\r\n    ] \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/public/15/favoriteProducts",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"15",
+										"favoriteProducts"
+									]
+								},
+								"description": "This route get all favorite  products\n\noptional params:\n\n| KEY| VALUE| DESCRIPTION |\n| --- | --- | --- |\n| q | string | to search |\n| field | string | gets only products meeting requirement |\n| sort | -field1,field2,-field3 | for sorting first takes precedence. if '-' is put before then sorted in desenting order, otherwise ascending order |\n| field[opertor] | string | nested param |\n| limit | number | pagi tools *deafault=10 |\n| offset | number | pagi tools |\n\nreturns \n```json\n[\n   {\n     \"id\": number,\n     \"name_ru\": string,\n     \"name_tm\": string,\n     \"brand\": string,\n     \"price\": string(decimal),\n     \"countInStock\": string(integer),\n     \"rating\": string(decimal),\n     \"numReviews\": integer,\n     \"images\": string[],\n     \"description_ru\": string,\n     \"description_tm\": string,\n     \"discount\": integer,\n     \"active\": boolean(true),\n     \"viewCount\": integer,\n     \"likeCount\": integer,\n     \"createdAt\": date,\n     \"updatedAt\": date,\n     \"marketId\": integer,\n     \"subCategoryId\": integer\n   }, \n   ...,\n   { Product }\n]\n```\nTotal number of data can be accessed from header X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get favorite product by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/15/favoriteProducts/14",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"15",
+										"favoriteProducts",
+										"14"
+									]
+								},
+								"description": "This route gets favorite product by id\n\nreturns \n```json\n   {\n     \"id\": number,\n     \"name_ru\": string,\n     \"name_tm\": string,\n     \"brand\": string,\n     \"price\": string(decimal),\n     \"countInStock\": string(integer),\n     \"rating\": string(decimal),\n     \"numReviews\": integer,\n     \"images\": string[],\n     \"description_ru\": string,\n     \"description_tm\": string,\n     \"discount\": integer,\n     \"active\": boolean(true),\n     \"viewCount\": integer,\n     \"likeCount\": integer,\n     \"createdAt\": date,\n     \"updatedAt\": date,\n     \"marketId\": integer,\n     \"subCategoryId\": integer\n   }\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete favorite product",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/15/favoriteProducts/13",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"15",
+										"favoriteProducts",
+										"13"
+									]
+								},
+								"description": "This route removes product from requesting user's favorites"
+							},
+							"response": []
+						}
+					],
+					"description": "favorites"
+				},
+				{
+					"name": "Orders Routes",
+					"item": [
+						{
+							"name": "Get all orders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/18/orders",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"18",
+										"orders"
+									]
+								},
+								"description": "gets all orders made by specified user"
+							},
+							"response": []
+						},
+						{
+							"name": "Get order by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/18/orders/38",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"18",
+										"orders",
+										"38"
+									]
+								},
+								"description": "gets product by uuid"
+							},
+							"response": []
+						},
+						{
+							"name": "Update order by id",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"paymentMethod\": \"byTerminal\"\r\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/public/15/orders/36",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"15",
+										"orders",
+										"36"
+									]
+								},
+								"description": "updates order by uuid"
+							},
+							"response": []
+						},
+						{
+							"name": "Create new order ",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"paymentMethod\": \"byTerminal\",\r\n    \"shippingAddress\": \"Ata Turk, Ashgabat\"\r\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/public/18/orders",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"18",
+										"orders"
+									]
+								},
+								"description": "creates new order"
+							},
+							"response": []
+						},
+						{
+							"name": "Submit order by id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/15/orders/35",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"15",
+										"orders",
+										"35"
+									]
+								},
+								"description": "submits order bu uuid"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete order by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/15/orders/36",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"15",
+										"orders",
+										"36"
+									]
+								},
+								"description": "deletes order by uuid"
+							},
+							"response": []
+						}
+					],
+					"description": "orders CRUD",
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{TOKEN}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Reviews Routes",
+					"item": [
+						{
+							"name": "Review product",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"rating\": 0.25,\r\n    \"description\": \"Godinize dykynow munyaly productany\"\r\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/public/18/reviews/16",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"18",
+										"reviews",
+										"16"
+									]
+								},
+								"description": "reviews product"
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{TOKEN}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Carts Routes",
+					"item": [
+						{
+							"name": "Get all items from Cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/18/carts",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"18",
+										"carts"
+									]
+								},
+								"description": "gets all items from Cart"
+							},
+							"response": []
+						},
+						{
+							"name": "Get product from Cart by product id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/15/carts/14",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"15",
+										"carts",
+										"14"
+									]
+								},
+								"description": "gets all items from Cart"
+							},
+							"response": []
+						},
+						{
+							"name": "Add product to cart specifying quantity",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quantity\": 55\r\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/public/18/carts/16/add",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"18",
+										"carts",
+										"16",
+										"add"
+									]
+								},
+								"description": "adds product to cart specifying quantity"
+							},
+							"response": []
+						},
+						{
+							"name": "Remove product from cart by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/15/carts/14/remove",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"15",
+										"carts",
+										"14",
+										"remove"
+									]
+								},
+								"description": "removes product from cart by id"
+							},
+							"response": []
+						},
+						{
+							"name": "Empty cart of requested user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/15/carts",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"15",
+										"carts"
+									]
+								},
+								"description": "this route totally removes products from your cart"
+							},
+							"response": []
+						}
+					],
+					"description": "Carts CRUD functionality"
+				},
+				{
+					"name": "Category Routes",
+					"item": [
+						{
+							"name": "Get all categories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/categories",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"categories"
+									]
+								},
+								"description": "this route gets categories with numberOfSubCategories\n\ncan take params as limit, offset, fieldName, q for searching and so on\n\nreturns body in this form\n```json \n{\n  \"id\": number,\n  \"name_ru\": string,\n  \"name_tm\": string,\n  \"image\": string,\n  \"numberOfSubCategories\": number\n}\n```\nnumber Of results returned in header as X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get category by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/categories/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"categories",
+										"1"
+									]
+								},
+								"description": "this route gets category by id with subCategories (limited to 10) and banners (limited to 10)\n\ndoes not take any params\n\nreturns body in this form\n```json\n{\n  \"id\": number,\n  \"name_ru\": string,\n  \"name_tm\": string,\n  \"image\": string,\n  \"subCategories\": [\n     { \n       \"id\": number,\n       \"name_ru\": string,\n       \"name_tm\": string,\n       \"categoryId\": number\n     },\n    ... \n     {\n       SubCategory\n     }\n  ],\n  \"banners\": [\n     { \n       \"id\": number,\n       \"image\": string,\n       \"page_path\": string,\n       \"categoryId\": number\n     },\n    ... \n     {\n       Banner\n     }\n  ]\n}\n```"
+							},
+							"response": []
+						}
+					],
+					"description": "Category Routes R functionality"
+				},
+				{
+					"name": "SearchTerms Routes",
+					"item": [
+						{
+							"name": "Get all searchLikeTerms",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/searchTerms?q=lo",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"searchTerms"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "lo"
+										}
+									]
+								},
+								"description": "gets all searched Terms \npass q=term in query to get\ngets in descending order by searchCount \nreturns array string[]"
+							},
+							"response": []
+						}
+					],
+					"description": "searchTerms R functionality"
+				},
+				{
+					"name": "Banners Routes",
+					"item": [
+						{
+							"name": "Get all banners",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/banners",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"banners"
+									]
+								},
+								"description": "this route gets banners with\n\ncan take params as limit, offset, fieldName, q for searching and so on\n\nreturns body in this form\n```json\n[\n  {\n    \"id\": number,\n    \"image\": string,\n    \"page_path\": string,\n    \"categoryId\": number\n  },\n  ...,\n  {Banner}\n]\n```\nnumber Of results returned in header as X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get banner by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/banners/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"banners",
+										"2"
+									]
+								},
+								"description": "this route gets banner by id with its related category\n\ndoes not take any params\n\nreturns body in this form\n```json \n{\n  \"id\": number,\n  \"image\": string,\n  \"page_path\": string,\n  \"categoryId\": number,\n  \"category\": {\n     \"id\": number,\n     \"name_ru\": string,\n     \"name_tm\": string,\n     \"image\": string\n   }\n}\n```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SubCategories Routes",
+					"item": [
+						{
+							"name": "Get all subCategories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/subCategories",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"subCategories"
+									]
+								},
+								"description": "this route gets subCategories with numberOfProducts (*only actives)\n\ncan take params as limit, offset, fieldName, q for searching and so on\n\nreturns body in this form\n```json \n[\n  {\n    \"id\": number,\n    \"name_ru\": string,\n    \"name_tm\": string,\n    \"categoryId\": number,\n    \"numberOfProducts\": number\n   },\n ...\n   {\n     SubCategory\n   }\n ]\n```\n# Pay Attention \nnumberOfProducts will take only active products\n\nnumber Of results returned in header as X-Total-Count"
+							},
+							"response": []
+						},
+						{
+							"name": "Get subCategory by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/subCategories/13",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"subCategories",
+										"13"
+									]
+								},
+								"description": "this route gets subCategory by id with active products\n\nreturns body in this form\n```json \n{\n  \"id\": number,\n  \"name_ru\": string,\n  \"name_tm\": string,\n  \"categoryId\": number,\n  \"products\": [\n      {\n         \"id\": number,\n         \"name_ru\": string,\n         \"name_tm\": string,\n         \"brand\": string,\n         \"price\": string(decimal),\n         \"countInStock\": string(integer),\n         \"rating\": string(decimal),\n         \"numReviews\": integer,\n         \"images\": string[],\n         \"description_ru\": string,\n         \"description_tm\": string,\n         \"discount\": integer,\n         \"active\": boolean(true),\n         \"viewCount\": integer,\n         \"likeCount\": integer,\n         \"creatorId\": number(or null) ,\n         \"subCategoryId\": number\n      },\n      ...,\n      {Product}\n  ]\n}\n```\n# Pay Attention\nIn sake of optimization number of products in array limited to 5 (use them as preview)\nto get more of them check product routes itself"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Markets Routes",
+					"item": [
+						{
+							"name": "Get all markets",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/markets",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"markets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get market by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/markets/7",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"markets",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Rate market by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"rating\": 5\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v1/public/markets/4/rate",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"markets",
+										"4",
+										"rate"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Brands Routes",
+					"item": [
+						{
+							"name": "Get all brands",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/brands",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"brands"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v1/public/brands/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"brands",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
