@@ -1,14 +1,15 @@
 const cors = require('cors');
+const blackList = require('./blackList');
 const ErrorResponse = require('../utils/errorResponse');
 
 // ========================================================
 //                   CORS OPTIONS
 // ========================================================
-const whitelist = ['::ffff:127.0.0.1',]
+//const whitelist = ['::ffff:127.0.0.1',]
 const corsOptionsDelegate = (req, callback) => {
   let corsOptions;
   console.log(req.connection.remoteAddress)
-  if (whitelist.indexOf(req.connection.remoteAddress) !== -1) {
+  if (blackList.indexOf(req.connection.remoteAddress) !== -1) {
     corsOptions = { origin: false } // disable CORS for this request
     callback(new ErrorResponse('Your IP address not allowed to have access to this route', 403), corsOptions);
 

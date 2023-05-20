@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
+router.use('/attackers', require('./attackersRoutes'))
 router.use('/users', require('./usersRoutes'))
 router.use('/products', require('./productsRoutes'))
 router.use('/inbox', require('./inboxRoutes'))

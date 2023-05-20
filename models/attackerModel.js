@@ -11,7 +11,7 @@ const bcrypt = require('bcryptjs')
  *                    @MODEL_DECLARATION
  *  ============================================================
  */
-class Striker extends Model {
+class Attacker extends Model {
 
 
 }
@@ -20,19 +20,30 @@ class Striker extends Model {
  *                   @MODEL_INITIALIZATION
  *  ============================================================
  */
-Striker.init(
+Attacker.init(
     {
-        ipAddress: {
+        ip_address:
+        {
             type: DataTypes.STRING,
             allowNull: false,
         },
-
-        time_stamp: DataTypes.DATE
+        is_blocked:
+        {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        },
+        attack_date:
+        {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW
+        }
     },
     {
         sequelize: db,
-        modelName: 'strikers',
-        createdAt: 'time_stamp',
+        modelName: 'attackers',
+        createdAt: 'attack_date',
 
     }
 )
@@ -53,11 +64,11 @@ Striker.init(
  *                      @MODEL_HOOKS
  *  ============================================================
  */
-// Striker.beforeValidate((instance, options) => {
+// Attacker.beforeValidate((instance, options) => {
 //     console.log(instance.getDataValue('phoneNumber'))
 //     instance.set('phoneNumber', instance.getDataValue('phoneNumber').slice(4))
 // })
-// Striker.beforeCreate(async (instance, options) => {
+// Attacker.beforeCreate(async (instance, options) => {
 //     await codeCryption(instance)
 // })
 /**
@@ -72,4 +83,4 @@ Striker.init(
  *  ============================================================
  */
 
-module.exports = Striker
+module.exports = Attacker

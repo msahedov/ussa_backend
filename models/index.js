@@ -13,7 +13,7 @@ const Market = require('./marketModel')
 const Otp = require('./otpModel')
 const Brand = require('./brandModel')
 const UsdRate = require('./usdRateModel')
-const Striker = require('./strikerModel')
+const Attacker = require('./attackerModel')
 module.exports = {
   Banner,
   Category,
@@ -30,5 +30,5 @@ module.exports = {
   Otp,
   Brand,
   UsdRate,
-  Striker
+  Attacker
 }

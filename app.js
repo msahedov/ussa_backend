@@ -19,6 +19,7 @@ const app = express()
 // Database setup configuration
 const db = require('./config/database')
 
+
 db.authenticate()
   .then(() => {
     console.log('Database connected...')
@@ -63,11 +64,11 @@ app.use('/api/v1', require('./routes'))
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
+
 app.listen(PORT, async () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on ${PORT}`)
   // await db.sync({ alter: true }) // you can uncomment if no changes applied to db columns
-  // importData()
-
   // comment when it in production level
+
   console.log(`Database synced all models successfully`)
 })

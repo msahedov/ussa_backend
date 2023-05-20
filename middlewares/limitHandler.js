@@ -1,6 +1,13 @@
 const rateLimit = require('express-rate-limit');
-const { addStriker } = require('../controllers/api/v1/admin/strikersControllers');
+const { Attacker } = require('../models');
+const blackList = require('./blackList');
 
+async function addAttacker(ip_address) {
+
+  blackList.push(ip_address)
+  const attacker = await Attacker.create({ ip_address })
+  return attacker;
+}
 
 
 const limitHandler = (limitMax, limitTimeInMinute) => rateLimit({
@@ -10,8 +17,10 @@ const limitHandler = (limitMax, limitTimeInMinute) => rateLimit({
   //   success: false,
   //   error: `Too many request from this IP, please try again in ${limitTimeInMinute} minutes later`
   // },
-  handler: function (req, res,/* next*/) {
-    //addStriker(req, res, next)
+  handler: function (req, res, next) {
+
+    addAttacker(`${req.connection.remoteAddress}`)
+
     res.status(429).send({
       success: false,
       error: `Too many request from this IP, please try again in ${limitTimeInMinute} minutes later`

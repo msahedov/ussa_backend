@@ -10,7 +10,8 @@ const subCategoriesControllers = require('./subCategoriesControllers')
 const marketsControllers = require('./marketsControllers')
 const brandsControllers = require('./brandsControllers')
 const usdRatesControllers = require('./usdRatesControllers')
-const strikersControllers = require('./strikersControllers')
+const attackersControllers = require('./attackersControllers')
+
 module.exports = {
   bannersControllers,
   categoriesControllers,
@@ -24,5 +25,5 @@ module.exports = {
   marketsControllers,
   brandsControllers,
   usdRatesControllers,
-  strikersControllers
+  attackersControllers
 }
